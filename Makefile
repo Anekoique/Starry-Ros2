@@ -1,26 +1,47 @@
+ROOT_FS := rootfs
 IMG := debian-riscv64.img
+IMG_SIZE := 4G
+TARFLAGS ?= -I 'xz -T0 -9e'
 
 init:
-	mkdir -p rootfs
+	mkdir -p $(ROOT_FS)
 	sudo debootstrap --arch=riscv64 --foreign --variant=minbase \
-		trixie ./rootfs \
+		trixie $(ROOT_FS) \
 		http://deb.debian.org/debian
-	sudo cp /usr/bin/qemu-riscv64-static ./rootfs/usr/bin/
-	sudo chroot ./rootfs /debootstrap/debootstrap --second-stage
+	sudo cp /usr/bin/qemu-riscv64-static $(ROOT_FS)/usr/bin/
+	sudo chroot $(ROOT_FS) /debootstrap/debootstrap --second-stage
 
-root:
-	sudo chroot ./rootfs /bin/bash
+mount: 
+	sudo mount -o bind /dev $(ROOT_FS)/dev
+	sudo mount -t devpts devpts $(ROOT_FS)/dev/pts
+	sudo mount -t proc proc $(ROOT_FS)/proc
+	sudo mount -t sysfs sysfs $(ROOT_FS)/sys
+
+umount:
+	@set -e; \
+	for mp in dev/pts proc sys dev; do \
+	  if mountpoint -q "$(ROOT_FS)/$$mp"; then \
+	    echo "umount $(ROOT_FS)/$$mp"; \
+	    sudo umount "$(ROOT_FS)/$$mp" || sudo umount -l "$(ROOT_FS)/$$mp"; \
+	  fi; \
+	done
+
+root: mount
+	sudo chroot $(ROOT_FS) /bin/bash
 
 img:
-	dd if=/dev/zero of=$(IMG) count=1024 bs=1M
+	truncate -s $(IMG_SIZE) $(IMG)
 	mkfs.ext4 -b 4096 -O ^metadata_csum $(IMG)
 	mkdir -p mnt
 	sudo mount $(IMG) mnt
-	sudo cp -a rootfs/* mnt/
+	sudo cp -a $(ROOT_FS)/* mnt/
 	sudo umount mnt
 
+pack:
+	tar $(TARFLAGS) -cpf $(basename $(IMG))2.tar.xz $(IMG)
+
 clean:
-	rm -rf rootfs mnt
+	rm -rf $(ROOT_FS) mnt
 
 .PHONY: init root img clean
 
