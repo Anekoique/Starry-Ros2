@@ -71,20 +71,36 @@ ros2 run demo_nodes_cpp listener
 
 # TODO
 
-- clone3
-- timerfd
-- netlink
-- ioctl command: 21505
+- timer check
+- more features support
 
-# FIX:
+# FIX
 
 arceos:
 
-- openat is_valid()
+- openat is_valid() https://github.com/Starry-OS/arceos/pull/25
+
+- handle concurrent page_faults on same page https://github.com/Starry-OS/arceos/pull/16
 
 Starry:
 
-- setpgid pid == proc().id()
+- setpgid pid == proc().id() https://github.com/Starry-OS/StarryOS/pull/71
+- getcwd should return filled len
+
+# FEAT
+
+arceos:
+
+- netlink route https://github.com/Starry-OS/arceos/pull/25
+- enhance axio https://github.com/Starry-OS/axio/pull/1
+
+Starry:
+
+- netlink route https://github.com/Starry-OS/StarryOS/pull/71
+- ioctl with FIOCLEX or FIONCLEX
+- multicast
+
+
 
 # Starry for ros2s
 
