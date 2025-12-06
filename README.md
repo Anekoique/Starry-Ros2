@@ -100,8 +100,6 @@ Starry:
 - ioctl with FIOCLEX or FIONCLEX
 - multicast
 
-
-
 # Starry for ros2s
 
 在Starry实现ros2基础功能的移植，大致需要实现以下库的移植

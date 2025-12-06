@@ -1,4 +1,3 @@
-[submodule "StarryOS"]
-	path = StarryOS
+[submodule "Starry"]
+	path = Starry
 	url = https://github.com/Anekoique/StarryOS.git
-	branch = ros
