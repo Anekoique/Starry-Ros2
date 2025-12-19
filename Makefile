@@ -17,7 +17,8 @@ mount:
 	sudo mount -t proc proc $(ROOT_FS)/proc
 	sudo mount -t sysfs sysfs $(ROOT_FS)/sys
 
-umount:
+root: mount
+	sudo chroot $(ROOT_FS) /bin/bash
 	@set -e; \
 	for mp in dev/pts proc sys dev; do \
 	  if mountpoint -q "$(ROOT_FS)/$$mp"; then \
@@ -25,9 +26,6 @@ umount:
 	    sudo umount "$(ROOT_FS)/$$mp" || sudo umount -l "$(ROOT_FS)/$$mp"; \
 	  fi; \
 	done
-
-root: mount
-	sudo chroot $(ROOT_FS) /bin/bash
 
 img:
 	truncate -s $(IMG_SIZE) $(IMG)
@@ -38,7 +36,7 @@ img:
 	sudo umount mnt
 
 pack:
-	tar $(TARFLAGS) -cpf $(basename $(IMG))2.tar.xz $(IMG)
+	tar $(TARFLAGS) -cpf $(basename $(IMG)).tar.xz $(IMG)
 
 clean:
 	rm -rf $(ROOT_FS) mnt

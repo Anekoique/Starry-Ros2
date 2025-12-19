@@ -12,15 +12,15 @@ sudo pacman -S debootstrap qemu-user-static qemu-user-static-binfmt
 
 **Compile content**：
 
-**1. A minimal ros2 jazzy (Base)**
+**A minimal ros2 jazzy**
 [A minimal img](https://github.com/Anekoique/Starry-Ros2/releases/tag/debian-jazzy-minimal)
 
-- CLI Tools: `ros2cli` (core), `ros2run` (executable launcher)
-- Demos: `demo_nodes_cpp`, `demo_nodes_py` (talker/listener)
-- Core Libraries: `rclcpp`, `rclpy` (client libraries)
-- Middleware: `rmw_fastrtps_cpp`, `fastrtps` (Fast DDS implementation)
+- CLI Tools: `ros2cli`  `ros2run`
+- Demos: `demo_nodes_cpp`, `demo_nodes_py` 
+- Core Libraries: `rclcpp`, `rclpy` 
+- Middleware: `rmw_fastrtps_cpp`, `fastrtps` 
 
-**2. More features compiled/support (Enhanced)**
+**More features compiled/support**
 [A prebuild img](https://github.com/Anekoique/Starry-Ros2/releases/tag/debian-jazzy-v0.1)
 
 - CLI Verbs: `topic`, `node`, `service`, `param`, `interface`, `doctor` `action`  `lifecycle`  `component` `pkg` `ros2launch` 
@@ -49,11 +49,11 @@ apt-get install -y python3-pip   python3-venv \
 	wget git build-essential cmake ninja-build curl pkg-config \
 	libacl1-dev liblttng-ctl-dev liblttng-ust-dev \
 	lttng-tools libasio-dev libtinyxml2-dev libeigen3-dev
-pip install colcon-common-extensions vcstool  numpy lark empy psutil
 
 # colcon with python venv
 python3 -m venv /opt/colconenv
 . /opt/colconenv/bin/activate
+pip install colcon-common-extensions vcstool numpy lark empy psutil
 
 # Get ros2 jazzy source
 mkdir -p /root/ros2_ws/src && cd /root/ros2_ws
@@ -77,17 +77,14 @@ colcon build --merge-install \
   --event-handlers console_direct+
 ```
 
+# TEST
+
 **A minimal test demo**
 
 ```shell
 ros2 run demo_nodes_cpp talker &
 ros2 run demo_nodes_cpp listener
 ```
-
-# TODO
-
-- timer check
-- more features support
 
 # FIX
 
@@ -104,6 +101,8 @@ Starry:
 - setpgid pid == proc().id() https://github.com/Starry-OS/StarryOS/pull/71
 - getcwd should return filled len
 - futex with FUTEX_WAIT_BITSET should use absolute time
+- lseek error return code
+- setpgid create_group not add to global PROCESS_GROUP
 
 # FEAT
 
@@ -118,6 +117,7 @@ Starry:
 - netlink route https://github.com/Starry-OS/StarryOS/pull/71
 - ioctl with FIOCLEX or FIONCLEX
 - refactor setsockopt to handle C structs with different len
+- add socket ioctl / more sockopt
 
 # Starry for ros2
 
